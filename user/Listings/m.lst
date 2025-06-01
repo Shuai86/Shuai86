@@ -1,0 +1,137 @@
+C51 COMPILER V9.54   M                                                                     04/04/2025 19:43:30 PAGE 1   
+
+
+C51 COMPILER V9.54, COMPILATION OF MODULE M
+OBJECT MODULE PLACED IN .\Objects\m.obj
+COMPILER INVOKED BY: C:\A01StudySoftware\Keil\C51\BIN\C51.EXE m.c OPTIMIZE(8,SPEED) BROWSE INCDIR(C:\A01StudySoftware\Ke
+                    -il\C51;C:\A01StudySoftware\Keil\C51\INC\STC) DEBUG OBJECTEXTEND PRINT(.\Listings\m.lst) TABS(3) OBJECT(.\Objects\m.obj)
+
+line level    source
+
+   1          #include <STC8G.H>
+   2          
+   3          unsigned int pwm = 0;
+   4          unsigned int Key_Slow_Down = 0;
+   5          unsigned char Key_Val, Key_Down, Key_Up, Key_Old;
+   6          
+   7          void Delay1x_us(unsigned int m)  //@12.000MHz Delay1x_ms(1);
+   8          {
+   9   1          if (m == 0) return;
+  10   1          while (m--)
+  11   1          {
+  12   2             unsigned char data i, j;
+  13   2      
+  14   2         i = 2;
+  15   2         j = 39;
+  16   2         do
+  17   2         {
+  18   3            while (--j);
+  19   3         } while (--i);
+  20   2      //        unsigned char i, j;
+  21   2      //        i = 32;
+  22   2      //        j = 40;
+  23   2      //        do
+  24   2      //        {
+  25   2      //            while (--j);
+  26   2      //        } while (--i);
+  27   2          }
+  28   1      }
+  29          void Delay1x_mms(unsigned int m) //@12.000MHz Delay1x_ms(1);
+  30          {
+  31   1          if (m == 0) return;
+  32   1          while (m--)
+  33   1          {
+  34   2      
+  35   2              unsigned char i, j;
+  36   2              i = 32;
+  37   2              j = 40;
+  38   2              do
+  39   2              {
+  40   3                  while (--j);
+  41   3              } while (--i);
+  42   2          }
+  43   1      }
+  44          void Timer0_Isr(void) interrupt 1
+  45          {
+  46   1          if (++Key_Slow_Down == pwm)
+  47   1          {
+  48   2              Key_Slow_Down = 0;
+  49   2          
+  50   2          }
+  51   1      }
+  52          
+  53          void Timer0_Init(void)     //1??@24.000MHz
+  54          {
+C51 COMPILER V9.54   M                                                                     04/04/2025 19:43:30 PAGE 2   
+
+  55   1          AUXR |= 0x80;       //?????1T???
+  56   1          TMOD &= 0xF0;       //????????
+  57   1          TL0 = 0x40;            //????????
+  58   1          TH0 = 0xA2;            //????????
+  59   1          TF0 = 0;            //??TF0????
+  60   1          TR0 = 1;            //???0????
+  61   1          ET0 = 1;            //?????0???
+  62   1      }
+  63          
+  64          void main()
+  65          {
+  66   1          P3M0 = 0x00;
+  67   1          P3M1 = 0x00;
+  68   1          P5M0 = 0x00;
+  69   1          P5M1 = 0x00;
+  70   1         P55 = 1;Delay1x_mms(1000);P55 = 0;
+  71   1          P54 = 0;
+  72   1      
+  73   1      //    Timer0_Init();
+  74   1      pwm =98;
+  75   1          while (1)
+  76   1          {
+  77   2      //        if (P54==1)
+  78   2      //        {
+  79   2      //            Delay1x_mms(10); // ????
+  80   2      //            if (P54==1) // ????
+  81   2      //             {  pwm++;P54 = 0;P55=0;Delay1x_mms(10);
+  82   2      //                if(pwm==3){pwm =3;} 
+  83   2      //              if(pwm==4){pwm =6;}
+  84   2      //              if(pwm==7){pwm =14;}
+  85   2      //              if(pwm==15){pwm =50;}
+  86   2      //              if(pwm==51){pwm =100;}
+  87   2      //              if(pwm==101){pwm=2;}
+  88   2      //       
+  89   2      //       }
+  90   2      //        }
+  91   2              if (P54==1)//·çÉÈµ÷ËÙ
+  92   2                 {pwm=100-pwm;            Delay1x_mms(10); // ????
+  93   3                  if (P54==1) // ????
+  94   3                     {  pwm++;P54 = 0;P55=0;
+  95   4                      if(pwm==3){pwm =10;} 
+  96   4                      if(pwm==11){pwm =30;}
+  97   4                      if(pwm==31){pwm =50;}
+  98   4                      if(pwm==51){pwm =75;}
+  99   4                      if(pwm==76){pwm =98;}
+ 100   4                      if(pwm==99){pwm=2;}
+ 101   4                   }
+ 102   3                     pwm=100-pwm;
+ 103   3               }
+ 104   2      //      if(pwm==0)P55 = 1;
+ 105   2               P55=1;Delay1x_us(pwm);
+ 106   2               P55=0;Delay1x_us(100-pwm);
+ 107   2          }
+ 108   1      }
+ 109              
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    288    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+C51 COMPILER V9.54   M                                                                     04/04/2025 19:43:30 PAGE 3   
+
+   DATA SIZE        =      8       4
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

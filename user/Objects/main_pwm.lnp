@@ -1,0 +1,4 @@
+".\Objects\STARTUP.obj",
+".\Objects\m.obj" 
+TO ".\Objects\main_pwm" 
+PRINT(".\Listings\main_pwm.m51") RAMSIZE(256) 
